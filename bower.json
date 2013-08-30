@@ -1,5 +1,5 @@
 {
-  "name": "backbone.listview",
+  "name": "backbone.collectionview",
   "version": "0.0.1",
   "dependencies": {
     "backbone": "~1.0.0",
@@ -7,5 +7,5 @@
     "underscore": "~1.5.1",
     "requirejs": "~2.1.8"
   },
-  "main": "backbone.listview.js"
+  "main": "backbone.collectionview.js"
 }
