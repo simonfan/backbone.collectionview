@@ -1,4 +1,4 @@
-define(['backbone.listview','backbone','jquery'], function(ListView, Backbone, $) {
+define(['backbone.collectionview','backbone','jquery'], function(CollectionView, Backbone, $) {
 
 	var collection = window.collection = new Backbone.Collection([
 		{ id: 1, name: 'apple' },
@@ -6,7 +6,7 @@ define(['backbone.listview','backbone','jquery'], function(ListView, Backbone, $
 		{ id: 3, name: 'pineapple' },
 	]);
 
-	var View = ListView.extend({
+	var View = CollectionView.extend({
 		itemData: function(model) {
 			var defer = $.Deferred(),
 				data = model.attributes;
@@ -23,7 +23,8 @@ define(['backbone.listview','backbone','jquery'], function(ListView, Backbone, $
 
 
 	var view = new View({
-		el: $('#list'),
+		el: $('body'),
+		list: $('#list'),
 		collection: collection,
 	});
 
