@@ -4,16 +4,16 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		initialize: function(options) {
 			/**
 			 * Options:
-			 *	- el: html list
+			 *	- el: html container
 			 *	- collection
 			 *	- itemData: function that intercepts the model rendering
 			 *	- itemTemplate: template function used to render the book itemnail.
 			 *	- itemSelector: function that returns a selector used to find a specific item.
 			 */
 			/**
-			 * The $list within which the items should be rendered.
+			 * The $container within which the items should be rendered.
 			 */
-			this.$list = options.list || this.$el;
+			this.$container = options.container || options.list || this.$el;
 
 			this.itemData = options.itemData || this.itemData;
 			this.itemTemplate = options.itemTemplate || this.itemTemplate;
@@ -50,7 +50,7 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		 * actions
 		 */
 		beforeAdd: function(model, $el) { $el.css('opacity', 0); },
-		add: function(model, $el) { this.$list.append($el); },
+		add: function(model, $el) { this.$container.append($el); },
 		afterAdd: function(model, $el) { return $el.animate({ opacity: 1 }); },
 
 		beforeRemove: function(model, $el) { return $el.animate({ opacity: 0 }); },
@@ -58,17 +58,17 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		afterRemove: function(model) {},
 
 
-		beforeReset: function(collection, $list) {},
-		reset: function(collection, $list) {
-			$list.html('');
+		beforeReset: function(collection, $container) {},
+		reset: function(collection, $container) {
+			$container.html('');
 
 			collection.each(this._handleAdd);
 		},
-		afterReset: function(collection, $list) {},
+		afterReset: function(collection, $container) {},
 
-		beforeSort: function(collection, $list) {},
-		sort: function(collection, $list) {},
-		afterSort: function(collection, $list) {},
+		beforeSort: function(collection, $container) {},
+		sort: function(collection, $container) {},
+		afterSort: function(collection, $container) {},
 
 
 		/**
@@ -87,7 +87,7 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 
 		/**
 		 * method returns a selector used to find the html representation of a given model.
-		 * within the $el of this list view.
+		 * within the $el of this container view.
 		 */
 		itemSelector: function(model) {
 			return '#' + model.id;
@@ -114,7 +114,7 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		},
 
 		_handleReset: function(collection, models) {
-			this._execActionSequence(['beforeReset','reset','afterReset'], [collection, this.$list]);
+			this._execActionSequence(['beforeReset','reset','afterReset'], [collection, this.$container]);
 		},
 
 		_handleRemove: function(model) {
@@ -164,7 +164,7 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		 */
 		retrieveElement: function(model) {
 			var selector = this.itemSelector(model),
-				$el = this.$list.find(selector);
+				$el = this.$container.find(selector);
 
 			return $el;
 		},
