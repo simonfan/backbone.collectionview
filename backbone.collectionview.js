@@ -10,9 +10,6 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 			 *	- itemTemplate: template function used to render the book itemnail.
 			 *	- itemSelector: function that returns a selector used to find a specific item.
 			 */
-
-			_.bindAll(this,'_handleAdd','_handleReset','_handleRemove','_execAction','retrieveElement');
-
 			/**
 			 * The $list within which the items should be rendered.
 			 */
@@ -22,10 +19,13 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 			this.itemTemplate = options.itemTemplate || this.itemTemplate;
 			this.itemSelector = options.itemSelector || this.itemSelector;
 
-			/**
-			 * Bind methods.
-			 */
-			_.bindAll(this,'add','remove','itemData','itemTemplate','itemSelector');
+			// item-related methods
+			_.bindAll(this,'itemData','itemTemplate','itemSelector');
+
+
+			// event handlers
+			_.bindAll(this,'_handleAdd','_handleReset','_handleRemove','_execAction','retrieveElement');
+
 
 			// listen to events on the collection
 			this.listenTo(this.collection, 'add', this._handleAdd)
@@ -33,12 +33,18 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 				.listenTo(this.collection, 'reset', this._handleReset);
 
 			// start things up.
-			this._handleReset(this.collection, this.collection.models);
+			this.start(this.collection);
 		},
+
+
 
 		/**
 		 * OVERWRITE METHODS
 		 */
+		
+		start: function(collection) {
+			this._handleReset(collection);
+		},
 
 		/**
 		 * actions
