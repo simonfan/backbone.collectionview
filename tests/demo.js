@@ -17,8 +17,18 @@ define(['backbone.collectionview','backbone','jquery'], function(CollectionView,
 		},
 
 		itemTemplate: function(data) {
-			return '<li id="'+ data.id +'"> id: ' + data.id +' - ' + data.name +'</li>';
-		}
+			return '<li id="'+ data.id +'"> id: ' + data.id +' - <span data-id="'+data.id+'">' + data.name +'</span></li>';
+		},
+
+		itemView: Backbone.View.extend({
+			events: {
+				'click span': 'lalala',
+			},
+
+			lalala: function(e) {
+				alert($(e.currentTarget).attr('data-id'));
+			}
+		})
 	});
 
 

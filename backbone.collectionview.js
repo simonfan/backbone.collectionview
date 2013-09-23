@@ -24,13 +24,13 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 
 
 			// event handlers
-			_.bindAll(this,'_handleAdd','_handleReset','_handleRemove','_execAction','retrieveElement');
+			_.bindAll(this,'handleAdd','handleReset','handleRemove','_execAction','retrieveElement');
 
 
 			// listen to events on the collection
-			this.listenTo(this.collection, 'add', this._handleAdd)
-				.listenTo(this.collection, 'remove', this._handleRemove)
-				.listenTo(this.collection, 'reset', this._handleReset);
+			this.listenTo(this.collection, 'add', this.handleAdd)
+				.listenTo(this.collection, 'remove', this.handleRemove)
+				.listenTo(this.collection, 'reset', this.handleReset);
 
 			// start things up.
 			this.start(this.collection);
@@ -43,7 +43,7 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		 */
 		
 		start: function(collection) {
-			this._handleReset(collection);
+			this.handleReset(collection);
 		},
 
 		/**
@@ -62,7 +62,7 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		reset: function(collection, $container) {
 			$container.html('');
 
-			collection.each(this._handleAdd);
+			collection.each(this.handleAdd);
 		},
 		afterReset: function(collection, $container) {},
 
@@ -86,6 +86,11 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		},
 
 		/**
+		 * The view
+		 */
+		itemView: function() {},
+
+		/**
 		 * method returns a selector used to find the html representation of a given model.
 		 * within the $el of this container view.
 		 */
@@ -97,7 +102,7 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		/**
 		 * Event handlers
 		 */
-		_handleAdd: function(model) {
+		handleAdd: function(model) {
 				// get the data for the template rendering
 				// if there is an itemData function set, use it. Otherwise just use the model's attributes.
 			var itemData = (typeof this.itemData === 'function') ? this.itemData(model) : model.attributes,
@@ -107,17 +112,19 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 
 			// wait for the itemnail to be rendered to continue.
 			renderItem.then(function(itemHtml) {
-				var $item = $(itemHtml);
+				var $item = $(itemHtml),
+					// build the view
+					view = new _this.itemView({ el: $item });
 
 				_this._execActionSequence(['beforeAdd','add','afterAdd'], [model, $item]);
 			});
 		},
 
-		_handleReset: function(collection, models) {
+		handleReset: function(collection, models) {
 			this._execActionSequence(['beforeReset','reset','afterReset'], [collection, this.$container]);
 		},
 
-		_handleRemove: function(model) {
+		handleRemove: function(model) {
 			// find the item to be removed
 			var $item = this.retrieveElement(model);
 
