@@ -1,6 +1,12 @@
 define(['backbone.collectionview','backbone','jquery'], function(CollectionView, Backbone, $) {
 
-	var collection = window.collection = new Backbone.Collection([
+	var Collection = Backbone.Collection.extend({
+		comparator: function(model) {
+			return model.get('id');
+		},
+	})
+
+	var collection = window.collection = new Collection ([
 		{ id: 1, name: 'apple' },
 		{ id: 2, name: 'banana' },
 		{ id: 3, name: 'pineapple' },

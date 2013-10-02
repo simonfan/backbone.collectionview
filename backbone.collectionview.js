@@ -50,7 +50,13 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		 * actions
 		 */
 		beforeAdd: function(model, $el) { $el.css('opacity', 0); },
-		add: function(model, $el) { this.$container.append($el); },
+		add: function(model, $el) {
+			// get model's index
+			var index = this.collection.indexOf(model),
+				$children = this.$container.children();
+
+			$children.length > 0 ? $children.eq(index - 1).after($el) : this.$container.append($el);
+		},
 		afterAdd: function(model, $el) { return $el.animate({ opacity: 1 }); },
 
 		beforeRemove: function(model, $el) { return $el.animate({ opacity: 0 }); },
@@ -114,7 +120,10 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 			renderItem.then(function(itemHtml) {
 				var $item = $(itemHtml),
 					// build the view
-					view = new _this.itemView({ el: $item });
+					view = new _this.itemView({
+						el: $item,
+						model: model
+					});
 
 				_this._execActionSequence(['beforeAdd','add','afterAdd'], [model, $item]);
 			});
