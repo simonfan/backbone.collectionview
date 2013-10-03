@@ -53,9 +53,9 @@ define(['backbone','underscore','_.asynch'], function(Backbone, undef, undef) {
 		add: function(model, $el) {
 			// get model's index
 			var index = this.collection.indexOf(model),
-				$children = this.$container.children();
+				$beforeIndex = this.$container.children().eq(index - 1);
 
-			$children.length > 0 ? $children.eq(index - 1).after($el) : this.$container.append($el);
+			$beforeIndex.length > 0 ? $beforeIndex.after($el) : this.$container.append($el);
 		},
 		afterAdd: function(model, $el) { return $el.animate({ opacity: 1 }); },
 
